@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Four: Trivia Challenge!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --board-background: #0077c2; /* Deep Blue */
+            --cell-empty: #e0f2f7; /* Light Blue/White */
+            --player1-color: #e53935; /* Red */
+            --player2-color: #fb8c00; /* Orange */
+            --player3-color: #43a047; /* Green */
+            --player4-color: #8e24aa; /* Purple */
+            --player5-color: #fdd835; /* Yellow */
+            --player6-color: #00897b; /* Teal */
+            --player7-color: #d81b60; /* Pink */
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #fff;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        #hud {
+            margin: 20px 0;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #board-container {
+            background-color: var(--board-background);
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            display: inline-block; /* To shrink wrap the board */
+            position: relative; /* For disc animation */
+            border: 5px solid #fff;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(7, 70px); /* Slightly larger cells */
+            gap: 8px; /* Slightly larger gap */
+        }
+
+        .cell {
+            width: 70px;
+            height: 70px;
+            background: var(--cell-empty);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell:hover {
+            transform: translateY(-5px) scale(1.05);
+            background-color: #d0e7ed; /* Lighter on hover */
+        }
+
+        .disc {
+            width: 60px; /* Slightly smaller than cell */
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1000px); /* Start off-screen for drop animation */
+            animation: dropDisc 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: relative;
+            display: block; /* Ensure disc takes up space */
+            border: 3px solid rgba(255, 255, 255, 0.5); /* White highlight */
+        }
+
+        @keyframes dropDisc {
+            0% { transform: translateY(-1000px) scale(0.5); opacity: 0; }
+            70% { transform: translateY(0px) scale(1.05); opacity: 1; }
+            100% { transform: translateY(0px) scale(1); opacity: 1; }
+        }
+
+        /* Player Disc Colors */
+        .disc.player-1 { background-color: var(--player1-color); }
+        .disc.player-2 { background-color: var(--player2-color); }
+        .disc.player-3 { background-color: var(--player3-color); }
+        .disc.player-4 { background-color: var(--player4-color); }
+        .disc.player-5 { background-color: var(--player5-color); }
+        .disc.player-6 { background-color: var(--player6-color); }
+        .disc.player-7 { background-color: var(--player7-color); }
+
+        /* Winning disc animation */
+        .disc.winning-disc {
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3); }
+            100% { box-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(255, 255, 255, 0.8), 0 0 35px rgba(255, 255, 255, 0.6); }
+        }
+
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 100; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none; /* Allows clicks underneath when hidden */
+        }
+
+        .modal.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h3 {
+            font-family: 'Fredoka One', cursive;
+            color: #0077c2;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .modal p {
+            text-align: left;
+            margin: 15px 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal p button {
+            background-color: #ff9800; /* Orange for answer buttons */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-right: 15px;
+            min-width: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .modal p button:hover {
+            background-color: #e68900;
+            transform: translateY(-2px);
+        }
+        .modal p span {
+            color: #555;
+            flex-grow: 1; /* Allows text to take up remaining space */
+        }
+
+        #setup-game-button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 30px;
+        }
+
+        #setup-game-button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            #hud { font-size: 1.2em; padding: 10px 15px; }
+            #board { grid-template-columns: repeat(7, 50px); gap: 4px; }
+            .cell { width: 50px; height: 50px; }
+            .disc { width: 45px; height: 45px; }
+            #board-container { padding: 10px; }
+            .modal-content { padding: 20px; max-width: 95%; }
+            .modal h3 { font-size: 1.5em; }
+            .modal p { font-size: 1em; }
+            .modal p button { padding: 8px 15px; font-size: 1em; margin-right: 10px; }
+            #setup-game-button { padding: 10px 20px; font-size: 1.1em; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 2em; }
+            #hud { font-size: 1em; padding: 8px 10px; }
+            #board { grid-template-columns: repeat(7, 40px); gap: 3px; }
+            .cell { width: 40px; height: 40px; }
+            .disc { width: 35px; height: 35px; }
+            #board-container { padding: 8px; }
+            .modal-content { padding: 15px; }
+            .modal h3 { font-size: 1.2em; }
+            .modal p { font-size: 0.9em; flex-direction: column; align-items: flex-start;}
+            .modal p button { margin-bottom: 5px; margin-right: 0; width: 100%;}
+            #setup-game-button { padding: 8px 15px; font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Connect Four: Trivia Challenge!</h1>
+    <div id="hud">Welcome! Click "Start Game" to begin!</div>
+    <div id="board-container">
+        <div id="board"></div>
+    </div>
+    
+    <div id="question-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="question-text"></h3>
+            <p><button onclick="checkAnswer('A')">A</button> <span id="option-a"></span></p>
+            <p><button onclick="checkAnswer('B')">B</button> <span id="option-b"></span></p>
+            <p><button onclick="checkAnswer('C')">C</button> <span id="option-c"></span></p>
+            <p><button onclick="checkAnswer('D')">D</button> <span id="option-d"></span></p>
+        </div>
+    </div>
+
+    <button id="setup-game-button" onclick="setupGame()">Start Game</button>
+
+    <script>
+        const ROWS = 6;
+        const COLS = 7;
+        let board = [];
+        let teamCount = 0;
+        let teamNames = [];
+        let teamColors = ['player-1', 'player-2', 'player-3', 'player-4', 'player-5', 'player-6', 'player-7']; // CSS class names
+        let currentTeamIndex = 0; // Use index to map to teamColors
+        let teamScores = [];
+        let questions = [
+            // Political Parties
+            { q: "What is a political party?", options: { A: "A club for former presidents.", B: "A group that protests government decisions.", C: "A government agency that runs elections.", D: "A group of people who share ideas about government and work to get their candidates elected." }, correct: "D" },
+            { q: "How did the two-party system begin in the U.S.?", options: { A: "It was decided by a popular vote.", B: "The Constitution required it.", C: "It started with disagreements between the Federalists and Anti-Federalists.", D: "It was an idea borrowed from Great Britain." }, correct: "C" },
+            { q: "What are the main goals of political parties?", options: { A: "To choose the nation's capital city.", B: "To make laws and enforce them.", C: "To provide news and entertainment.", D: "To win elections, influence government, and share ideas with voters." }, correct: "D" },
+            { q: "What are the main functions of political parties?", options: { A: "To operate the postal service.", B: "Printing money and funding the military.", C: "Recruiting candidates, educating voters, and helping candidates win.", D: "Appointing judges and cabinet members." }, correct: "C" },
+            { q: "How do political parties help citizens get involved?", options: { A: "By providing free transportation to Washington, D.C.", B: "By requiring citizens to join a party.", C: "By paying people to vote for their candidates.", D: "By encouraging people to vote, volunteer, and share opinions." }, correct: "D" },
+            { q: "What is the role of third parties?", options: { A: "To ensure no party gets a majority.", B: "To always support one of the two major parties.", C: "To focus on specific issues and influence the major parties.", D: "To make sure elections are always close." }, correct: "C" },
+            // Campaigns and Media
+            { q: "What does a candidate do during a campaign?", options: { A: "Take a long vacation.", B: "Writes new laws for the country.", C: "Hides their ideas from the public.", D: "Shares ideas, meets voters, and tries to win support." }, correct: "D" },
+            { q: "What do volunteers do in a campaign?", options: { A: "Fact-check the candidate's speeches.", B: "They are paid to vote for the candidate.", C: "They help organize events and make phone calls.", D: "They work as the candidate's bodyguard." }, correct: "C" },
+            { q: "How does the media affect elections?", options: { A: "It legally cannot report on elections.", B: "By informing the public and acting as a watchdog.", C: "It tells people how they must vote.", D: "It only reports on one candidate." }, correct: "B" },
+            { q: "How has social media changed campaigns?", options: { A: "It's a new requirement for running for office.", B: "It has made campaigning more expensive.", C: "It allows candidates to talk directly to voters.", D: "It is the only way to get political news." }, correct: "C" },
+            { q: "How do voters make informed choices?", options: { A: "By choosing the candidate with the best slogan.", B: "By voting for the candidate who is most famous.", C: "By checking facts, comparing candidates, and thinking about issues.", D: "By only listening to one news source." }, correct: "C" },
+            { q: "What do poll watchers do?", options: { A: "They conduct exit polls to predict the winner.", B: "They tell people who to vote for at the polls.", C: "They make sure elections are fair and votes are counted correctly.", D: "They help voters fill out their ballots." }, correct: "C" },
+            // Campaign Finance
+            { q: "Why do people give money to campaigns?", options: { A: "To get a tax deduction.", B: "They are legally required to.", C: "To support candidates or causes they believe in.", D: "To get a high-paying job in the government." }, correct: "C" },
+            { q: "How does having a lot of money help a campaign?", options: { A: "It lets them pay voters directly.", B: "It guarantees the candidate will win.", C: "It helps pay for ads, events, and other activities.", D: "It allows them to buy votes." }, correct: "C" },
+            { q: "What is a Political Action Committee (PAC)?", options: { A: "A group of retired politicians.", B: "A group that protests election results.", C: "A group that collects money to help candidates who support their ideas.", D: "A government committee that runs political parties." }, correct: "C" },
+            { q: "What did the Citizens United v. FEC (2010) case decide?", options: { A: "That all elections must be publicly funded.", B: "That corporations cannot spend money on political ads.", C: "That only individuals can donate to campaigns.", D: "That businesses can spend unlimited money on political ads as free speech." }, correct: "D" },
+            { q: "Why do some people want limits on campaign spending?", options: { A: "To make elections faster.", B: "To prevent wealthy donors from having too much influence.", C: "To make campaigns less interesting.", D: "To make it harder for new candidates to run." }, correct: "B" },
+            // Voting Rights & History
+            { q: "Who can register to vote in Virginia?", options: { A: "Any U.S. citizen over 16.", B: "Anyone who lives in Virginia, regardless of age.", C: "Only people who were born in Virginia.", D: "U.S. citizens who live in Virginia and are at least 18." }, correct: "D" },
+            { q: "Name one way Virginians can register to vote.", options: { A: "By calling the Governor's office.", B: "By sending a text message.", C: "Online, by mail, or in person at the DMV.", D: "By telling a poll worker on Election Day." }, correct: "C" },
+            { q: "How have voting rights in the U.S. changed over time?", options: { A: "Voting has become more difficult.", B: "Fewer people are allowed to vote now.", C: "More groups gained the right to vote through amendments and laws.", D: "Only wealthy people can vote now." }, correct: "C" },
+            { q: "What right did the 15th Amendment grant?", options: { A: "It granted citizenship to all persons born in the U.S.", B: "It gave women the right to vote.", C: "It gave African American men the right to vote.", D: "It lowered the voting age to 18." }, correct: "C" },
+            { q: "What right did the 19th Amendment grant?", options: { A: "It gave women the right to vote.", B: "It banned poll taxes.", C: "It gave 18-year-olds the right to vote.", D: "It prohibited the sale of alcohol." }, correct: "A" },
+            { q: "What right did the 23rd Amendment grant?", options: { A: "It limited the President to two terms.", B: "It gave women the right to vote.", C: "It gave people in Washington, D.C. the right to vote for president.", D: "It ended poll taxes." }, correct: "C" },
+            { q: "What did the 24th Amendment end?", options: { A: "Slavery.", B: "The Electoral College.", C: "Poll taxes.", D: "The two-party system." }, correct: "C" },
+            { q: "What did the 26th Amendment change?", options: { A: "The number of senators per state.", B: "It gave women the right to vote.", C: "It lowered the voting age to 18.", D: "It banned poll taxes." }, correct: "C" },
+            { q: "What was the purpose of the Voting Rights Act of 1965?", options: { A: "To establish a national voting holiday.", B: "To create new political parties.", C: "To protect voting rights by banning unfair tests.", D: "To raise money for presidential campaigns." }, correct: "C" },
+            { q: "Name one factor that affects voter turnout.", options: { A: "The number of candidates.", B: "A voter's height.", C: "A voter's age, income, or education level.", D: "A voter's number of pets." }, correct: "C" },
+            { q: "Name one obstacle that might prevent someone from voting.", options: { A: "Too many candidates to choose from.", B: "The weather is too nice.", C: "Complicated registration or long lines.", D: "The election is on a weekend." }, correct: "C" },
+            { q: "How can students under 18 participate in politics?", options: { A: "By voting in local elections.", B: "By running for president.", C: "By volunteering, learning about issues, and encouraging others to vote.", D: "They cannot participate until they are 18." }, correct: "C" },
+            // Electoral College
+            { q: "What is the Electoral College?", options: { A: "A private university for political science.", B: "A school where politicians learn to debate.", C: "A group that officially elects the president and vice president.", D: "A group of voters who advise the president." }, correct: "C" },
+            { q: "How does a state get its number of electors?", options: { A: "It is based on its date of statehood.", B: "It is based on the state's physical size.", C: "It equals the number of senators and representatives the state has.", D: "Every state gets the same number of electors." }, correct: "C" },
+            { q: "How many electoral votes are needed to win the presidency?", options: { A: "538", B: "100", C: "270", D: "435." }, correct: "C" },
+            { q: "What is the 'winner-take-all' system in the Electoral College?", options: { A: "The candidate with the most money wins.", B: "The winner of the election takes all the money.", C: "The candidate with the most votes in a state gets all its electoral votes.", D: "The winner of the presidency gets to be in charge of all states." }, correct: "C" },
+            { q: "Why do some people support keeping the Electoral College?", options: { A: "It is required by international law.", B: "Because it guarantees the most popular candidate always wins.", C: "Because it gives smaller states a voice.", D: "Because it is the cheapest way to run an election." }, correct: "C" },
+            { q: "Why do some people want to end the Electoral College?", options: { A: "Because it benefits only large cities.", B: "Because it is too expensive to operate.", C: "Because a candidate can win without winning the popular vote.", D: "Because it is too difficult for voters to understand." }, correct: "C" },
+            // Recap Questions
+            { q: "What is a key difference between the Federalists and Anti-Federalists?", options: { A: "They lived in different centuries.", B: "They supported different countries in wars.", C: "They had disagreements about the Constitution's power.", D: "They wanted different national holidays." }, correct: "C" },
+            { q: "Name two of the main functions of a political party.", options: { A: "To run the Supreme Court and Congress.", B: "To print money and declare war.", C: "To recruit candidates and educate voters.", D: "To command the army and run the postal service." }, correct: "C" },
+            { q: "According to the 26th Amendment, what is the minimum age to vote?", options: { A: "21", B: "16", C: "18", D: "25." }, correct: "C" },
+            { q: "Which amendment banned poll taxes?", options: { A: "13th Amendment", B: "19th Amendment", C: "15th Amendment", D: "24th Amendment" }, correct: "D" },
+            { q: "What is the total number of electoral votes in the United States?", options: { A: "435", B: "100", C: "538", D: "270" }, correct: "C" },
+            { q: "Name one way a student under 18 can get involved in an election.", options: { A: "By running for a local office.", B: "By donating money.", C: "By volunteering for a campaign.", D: "By signing official legislation." }, correct: "C" },
+            { q: "How is the popular vote in a state usually connected to its electoral votes?", options: { A: "It has no connection.", B: "The winner of the popular vote gets half the electoral votes.", C: "The popular vote winner gets all the state's electoral votes.", D: "They are not connected in any way." }, correct: "C" }
+        ];
+
+        let availableQuestions = [];
+        let currentQuestion = null;
+        let selectedColumn = -1;
+        let isWaitingForAnswer = false; // Flag to prevent multiple clicks during question
+
+        // --- Game Setup Functions ---
+        function initializeGame() {
+            board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0)); // 0 for empty, 1-7 for teams
+            createBoardCells();
+            resetQuestions();
+            updateHUD();
+        }
+
+        function setupGame() {
+            teamCount = parseInt(prompt("How many teams? (2-7)", 2));
+            if (isNaN(teamCount) || teamCount < 2 || teamCount > 7) {
+                alert("Please enter a number between 2 and 7 for the number of teams.");
+                teamCount = 2; // Default to 2 if invalid input
+            }
+            teamNames = [];
+            for (let i = 0; i < teamCount; i++) {
+                let name = prompt(`Enter name for Team ${i + 1} (Player ${i + 1} - ${teamColors[i].replace('player-', '')})`, `Team ${i + 1}`);
+                teamNames.push(name || `Team ${i + 1}`);
+            }
+            teamScores = Array(teamCount).fill(0);
+            currentTeamIndex = 0;
+            initializeGame(); // This will also create/reset the board and HUD
+        }
+
+        function createBoardCells() {
+            const boardDiv = document.getElementById("board");
+            boardDiv.innerHTML = ""; // Clear existing cells
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const cell = document.createElement("div");
+                    cell.className = "cell";
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    // Only attach click handler to the top row for visual feedback,
+                    // actual drop disc logic will handle finding the lowest spot.
+                    // Or, more intuitively, attach to all but only process if not full.
+                    cell.onclick = () => handleColumnClick(c);
+                    boardDiv.appendChild(cell);
+                }
+            }
+        }
+
+        function updateHUD() {
+            const scoresText = teamNames.map((name, i) => {
+                const colorName = teamColors[i].replace('player-', ''); // e.g., 'red', 'orange'
+                return `<span style="color: var(--${teamColors[i]});">${name} (${colorName}): ${teamScores[i]}</span>`;
+            }).join(" | ");
+            document.getElementById("hud").innerHTML = `Turn: <span style="color: var(--${teamColors[currentTeamIndex]});">${teamNames[currentTeamIndex]}</span> | Scores: ${scoresText}`;
+        }
+
+        // --- Question & Answer Logic ---
+        function resetQuestions() {
+            availableQuestions = [...questions]; // Clone all questions
+            shuffleArray(availableQuestions); // Shuffle them
+        }
+
+        function getNextQuestion() {
+            if (availableQuestions.length === 0) {
+                alert("You've answered all the questions! Reshuffling for more fun!");
+                resetQuestions();
+            }
+            const q = availableQuestions.pop(); // Get and remove last question
+            currentQuestion = q;
+            return q;
+        }
+
+        function handleColumnClick(col) {
+            if (isWaitingForAnswer || board[0][col] !== 0) { // If modal is open or column is full
+                if (board[0][col] !== 0 && !isWaitingForAnswer) alert("That column is full! Please choose another.");
+                return;
+            }
+
+            selectedColumn = col;
+            const q = getNextQuestion();
+            displayQuestion(q);
+        }
+
+        function displayQuestion(qData) {
+            document.getElementById("question-text").textContent = qData.q;
+            document.getElementById("option-a").textContent = qData.options.A;
+            document.getElementById("option-b").textContent = qData.options.B;
+            document.getElementById("option-c").textContent = qData.options.C;
+            document.getElementById("option-d").textContent = qData.options.D;
+
+            const modal = document.getElementById("question-modal");
+            modal.classList.add('is-visible');
+            isWaitingForAnswer = true;
+        }
+
+        function checkAnswer(choice) {
+            const modal = document.getElementById("question-modal");
+            modal.classList.remove('is-visible');
+            isWaitingForAnswer = false;
+
+            if (choice === currentQuestion.correct) {
+                // Correct answer, now drop the disc
+                dropDisc(selectedColumn);
+            } else {
+                alert(`Oops! The correct answer was ${currentQuestion.correct}. Next team's turn.`);
+                nextTeam();
+            }
+        }
+
+        // --- Disc Drop & Game Logic ---
+        function dropDisc(col) {
+            for (let row = ROWS - 1; row >= 0; row--) {
+                if (board[row][col] === 0) {
+                    board[row][col] = currentTeamIndex + 1; // Store team index + 1 (1-7)
+                    const cellDiv = document.querySelector(`[data-row='${row}'][data-col='${col}']`);
+                    
+                    // Create disc element
+                    const discDiv = document.createElement("div");
+                    discDiv.className = `disc ${teamColors[currentTeamIndex]}`;
+                    
+                    // Append disc to cell and trigger animation
+                    cellDiv.appendChild(discDiv);
+
+                    // After animation, check win or move to next turn
+                    discDiv.addEventListener('animationend', () => {
+                        if (checkWin(row, col)) {
+                            teamScores[currentTeamIndex]++;
+                            alert(`${teamNames[currentTeamIndex]} wins this round!`);
+                            resetBoard();
+                        } else if (isBoardFull()) {
+                            alert("Board full! It's a tie game for this round.");
+                            resetBoard();
+                        } else {
+                            nextTeam();
+                        }
+                    }, { once: true });
+                    return; // Disc dropped, exit loop
+                }
+            }
+        }
+
+        function nextTeam() {
+            currentTeamIndex = (currentTeamIndex + 1) % teamCount;
+            updateHUD();
+        }
+
+        function checkWin(row, col) {
+            const player = board[row][col];
+            const directions = [
+                { dr: 0, dc: 1 },  // Horizontal
+                { dr: 1, dc: 0 },  // Vertical
+                { dr: 1, dc: 1 },  // Diagonal (\)
+                { dr: 1, dc: -1 }  // Diagonal (/)
+            ];
+
+            for (const dir of directions) {
+                let count = 0;
+                let winningCells = [];
+
+                // Check in both positive and negative directions
+                for (let i = -3; i <= 3; i++) { // Check 7 cells centered around (row,col)
+                    const r = row + dir.dr * i;
+                    const c = col + dir.dc * i;
+
+                    if (r >= 0 && r < ROWS && c >= 0 && c < COLS && board[r][c] === player) {
+                        count++;
+                        winningCells.push({r, c});
+                        if (count >= 4) {
+                            // Mark winning discs for animation
+                            winningCells.slice(winningCells.length - 4).forEach(cell => {
+                                const discElement = document.querySelector(`[data-row='${cell.r}'][data-col='${cell.c}'] .disc`);
+                                if (discElement) {
+                                    discElement.classList.add('winning-disc');
+                                }
+                            });
+                            return true;
+                        }
+                    } else {
+                        count = 0; // Reset count if player's discs are interrupted
+                        winningCells = []; // Reset winning cells array
+                    }
+                }
+            }
+            return false;
+        }
+
+        function isBoardFull() {
+            return board[0].every(cell => cell !== 0); // Check if the top row has any empty cells
+        }
+
+        function resetBoard() {
+            board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
+            createBoardCells(); // Re-render the empty board cells
+            resetQuestions(); // Reshuffle questions for a new round
+            currentTeamIndex = 0; // Reset to first team
+            updateHUD();
+        }
+
+        // Utility: Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Initialize game on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGame();
+        });
+    </script>
+</body>
+</html>
