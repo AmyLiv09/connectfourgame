@@ -59,15 +59,15 @@
             padding: 15px;
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-            display: inline-block; /* To shrink wrap the board */
-            position: relative; /* For disc animation */
+            display: inline-block;
+            position: relative;
             border: 5px solid #fff;
         }
 
         #board {
             display: grid;
-            grid-template-columns: repeat(7, 70px); /* Slightly larger cells */
-            gap: 8px; /* Slightly larger gap */
+            grid-template-columns: repeat(7, 70px);
+            gap: 8px;
         }
 
         .cell {
@@ -85,19 +85,19 @@
 
         .cell:hover {
             transform: translateY(-5px) scale(1.05);
-            background-color: #d0e7ed; /* Lighter on hover */
+            background-color: #d0e7ed;
         }
 
         .disc {
-            width: 60px; /* Slightly smaller than cell */
+            width: 60px;
             height: 60px;
             border-radius: 50%;
             box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
-            transform: translateY(-1000px); /* Start off-screen for drop animation */
+            transform: translateY(-1000px);
             animation: dropDisc 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             position: relative;
-            display: block; /* Ensure disc takes up space */
-            border: 3px solid rgba(255, 255, 255, 0.5); /* White highlight */
+            display: block;
+            border: 3px solid rgba(255, 255, 255, 0.5);
         }
 
         @keyframes dropDisc {
@@ -106,7 +106,6 @@
             100% { transform: translateY(0px) scale(1); opacity: 1; }
         }
 
-        /* Player Disc Colors */
         .disc.player-1 { background-color: var(--player1-color); }
         .disc.player-2 { background-color: var(--player2-color); }
         .disc.player-3 { background-color: var(--player3-color); }
@@ -115,7 +114,6 @@
         .disc.player-6 { background-color: var(--player6-color); }
         .disc.player-7 { background-color: var(--player7-color); }
 
-        /* Winning disc animation */
         .disc.winning-disc {
             animation: pulseGlow 1.5s infinite alternate;
         }
@@ -125,24 +123,20 @@
             100% { box-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(255, 255, 255, 0.8), 0 0 35px rgba(255, 255, 255, 0.6); }
         }
 
-
-        /* Modal styles */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 100; /* Sit on top */
+            position: fixed;
+            z-index: 100;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
-            pointer-events: none; /* Allows clicks underneath when hidden */
+            pointer-events: none;
         }
 
         .modal.is-visible {
@@ -152,7 +146,6 @@
 
         .modal-content {
             background-color: #fefefe;
-            margin: auto;
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
@@ -173,39 +166,34 @@
             font-size: 1.8em;
             margin-bottom: 20px;
         }
-
-        .modal p {
-            text-align: left;
-            margin: 15px 0;
-            font-size: 1.1em;
+        
+        #answer-options {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 10px; /* Space between answer buttons */
         }
 
-        .modal p button {
-            background-color: #ff9800; /* Orange for answer buttons */
+        .answer-button {
+            background-color: #ff9800;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.1em;
-            margin-right: 15px;
-            min-width: 50px;
+            width: 100%;
+            text-align: left;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
-        .modal p button:hover {
+
+        .answer-button:hover {
             background-color: #e68900;
             transform: translateY(-2px);
         }
-        .modal p span {
-            color: #555;
-            flex-grow: 1; /* Allows text to take up remaining space */
-        }
 
         #setup-game-button {
-            background-color: #4CAF50; /* Green */
+            background-color: #4CAF50;
             color: white;
             padding: 12px 30px;
             font-size: 1.3em;
@@ -222,7 +210,6 @@
             transform: translateY(-3px);
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 768px) {
             h1 { font-size: 2.5em; }
             #hud { font-size: 1.2em; padding: 10px 15px; }
@@ -232,9 +219,6 @@
             #board-container { padding: 10px; }
             .modal-content { padding: 20px; max-width: 95%; }
             .modal h3 { font-size: 1.5em; }
-            .modal p { font-size: 1em; }
-            .modal p button { padding: 8px 15px; font-size: 1em; margin-right: 10px; }
-            #setup-game-button { padding: 10px 20px; font-size: 1.1em; }
         }
         @media (max-width: 480px) {
             h1 { font-size: 2em; }
@@ -245,9 +229,6 @@
             #board-container { padding: 8px; }
             .modal-content { padding: 15px; }
             .modal h3 { font-size: 1.2em; }
-            .modal p { font-size: 0.9em; flex-direction: column; align-items: flex-start;}
-            .modal p button { margin-bottom: 5px; margin-right: 0; width: 100%;}
-            #setup-game-button { padding: 8px 15px; font-size: 1em; }
         }
     </style>
 </head>
@@ -261,10 +242,7 @@
     <div id="question-modal" class="modal">
         <div class="modal-content">
             <h3 id="question-text"></h3>
-            <p><button onclick="checkAnswer('A')">A</button> <span id="option-a"></span></p>
-            <p><button onclick="checkAnswer('B')">B</button> <span id="option-b"></span></p>
-            <p><button onclick="checkAnswer('C')">C</button> <span id="option-c"></span></p>
-            <p><button onclick="checkAnswer('D')">D</button> <span id="option-d"></span></p>
+            <div id="answer-options"></div>
         </div>
     </div>
 
@@ -276,68 +254,63 @@
         let board = [];
         let teamCount = 0;
         let teamNames = [];
-        let teamColors = ['player-1', 'player-2', 'player-3', 'player-4', 'player-5', 'player-6', 'player-7']; // CSS class names
-        let currentTeamIndex = 0; // Use index to map to teamColors
+        let teamColors = ['player-1', 'player-2', 'player-3', 'player-4', 'player-5', 'player-6', 'player-7'];
+        let currentTeamIndex = 0;
         let teamScores = [];
+        
+        // --- NEW: Questions array with a reshuffle-friendly format ---
         let questions = [
-            // Political Parties
-            { q: "What is a political party?", options: { A: "A club for former presidents.", B: "A group that protests government decisions.", C: "A government agency that runs elections.", D: "A group of people who share ideas about government and work to get their candidates elected." }, correct: "D" },
-            { q: "How did the two-party system begin in the U.S.?", options: { A: "It was decided by a popular vote.", B: "The Constitution required it.", C: "It started with disagreements between the Federalists and Anti-Federalists.", D: "It was an idea borrowed from Great Britain." }, correct: "C" },
-            { q: "What are the main goals of political parties?", options: { A: "To choose the nation's capital city.", B: "To make laws and enforce them.", C: "To provide news and entertainment.", D: "To win elections, influence government, and share ideas with voters." }, correct: "D" },
-            { q: "What are the main functions of political parties?", options: { A: "To operate the postal service.", B: "Printing money and funding the military.", C: "Recruiting candidates, educating voters, and helping candidates win.", D: "Appointing judges and cabinet members." }, correct: "C" },
-            { q: "How do political parties help citizens get involved?", options: { A: "By providing free transportation to Washington, D.C.", B: "By requiring citizens to join a party.", C: "By paying people to vote for their candidates.", D: "By encouraging people to vote, volunteer, and share opinions." }, correct: "D" },
-            { q: "What is the role of third parties?", options: { A: "To ensure no party gets a majority.", B: "To always support one of the two major parties.", C: "To focus on specific issues and influence the major parties.", D: "To make sure elections are always close." }, correct: "C" },
-            // Campaigns and Media
-            { q: "What does a candidate do during a campaign?", options: { A: "Take a long vacation.", B: "Writes new laws for the country.", C: "Hides their ideas from the public.", D: "Shares ideas, meets voters, and tries to win support." }, correct: "D" },
-            { q: "What do volunteers do in a campaign?", options: { A: "Fact-check the candidate's speeches.", B: "They are paid to vote for the candidate.", C: "They help organize events and make phone calls.", D: "They work as the candidate's bodyguard." }, correct: "C" },
-            { q: "How does the media affect elections?", options: { A: "It legally cannot report on elections.", B: "By informing the public and acting as a watchdog.", C: "It tells people how they must vote.", D: "It only reports on one candidate." }, correct: "B" },
-            { q: "How has social media changed campaigns?", options: { A: "It's a new requirement for running for office.", B: "It has made campaigning more expensive.", C: "It allows candidates to talk directly to voters.", D: "It is the only way to get political news." }, correct: "C" },
-            { q: "How do voters make informed choices?", options: { A: "By choosing the candidate with the best slogan.", B: "By voting for the candidate who is most famous.", C: "By checking facts, comparing candidates, and thinking about issues.", D: "By only listening to one news source." }, correct: "C" },
-            { q: "What do poll watchers do?", options: { A: "They conduct exit polls to predict the winner.", B: "They tell people who to vote for at the polls.", C: "They make sure elections are fair and votes are counted correctly.", D: "They help voters fill out their ballots." }, correct: "C" },
-            // Campaign Finance
-            { q: "Why do people give money to campaigns?", options: { A: "To get a tax deduction.", B: "They are legally required to.", C: "To support candidates or causes they believe in.", D: "To get a high-paying job in the government." }, correct: "C" },
-            { q: "How does having a lot of money help a campaign?", options: { A: "It lets them pay voters directly.", B: "It guarantees the candidate will win.", C: "It helps pay for ads, events, and other activities.", D: "It allows them to buy votes." }, correct: "C" },
-            { q: "What is a Political Action Committee (PAC)?", options: { A: "A group of retired politicians.", B: "A group that protests election results.", C: "A group that collects money to help candidates who support their ideas.", D: "A government committee that runs political parties." }, correct: "C" },
-            { q: "What did the Citizens United v. FEC (2010) case decide?", options: { A: "That all elections must be publicly funded.", B: "That corporations cannot spend money on political ads.", C: "That only individuals can donate to campaigns.", D: "That businesses can spend unlimited money on political ads as free speech." }, correct: "D" },
-            { q: "Why do some people want limits on campaign spending?", options: { A: "To make elections faster.", B: "To prevent wealthy donors from having too much influence.", C: "To make campaigns less interesting.", D: "To make it harder for new candidates to run." }, correct: "B" },
-            // Voting Rights & History
-            { q: "Who can register to vote in Virginia?", options: { A: "Any U.S. citizen over 16.", B: "Anyone who lives in Virginia, regardless of age.", C: "Only people who were born in Virginia.", D: "U.S. citizens who live in Virginia and are at least 18." }, correct: "D" },
-            { q: "Name one way Virginians can register to vote.", options: { A: "By calling the Governor's office.", B: "By sending a text message.", C: "Online, by mail, or in person at the DMV.", D: "By telling a poll worker on Election Day." }, correct: "C" },
-            { q: "How have voting rights in the U.S. changed over time?", options: { A: "Voting has become more difficult.", B: "Fewer people are allowed to vote now.", C: "More groups gained the right to vote through amendments and laws.", D: "Only wealthy people can vote now." }, correct: "C" },
-            { q: "What right did the 15th Amendment grant?", options: { A: "It granted citizenship to all persons born in the U.S.", B: "It gave women the right to vote.", C: "It gave African American men the right to vote.", D: "It lowered the voting age to 18." }, correct: "C" },
-            { q: "What right did the 19th Amendment grant?", options: { A: "It gave women the right to vote.", B: "It banned poll taxes.", C: "It gave 18-year-olds the right to vote.", D: "It prohibited the sale of alcohol." }, correct: "A" },
-            { q: "What right did the 23rd Amendment grant?", options: { A: "It limited the President to two terms.", B: "It gave women the right to vote.", C: "It gave people in Washington, D.C. the right to vote for president.", D: "It ended poll taxes." }, correct: "C" },
-            { q: "What did the 24th Amendment end?", options: { A: "Slavery.", B: "The Electoral College.", C: "Poll taxes.", D: "The two-party system." }, correct: "C" },
-            { q: "What did the 26th Amendment change?", options: { A: "The number of senators per state.", B: "It gave women the right to vote.", C: "It lowered the voting age to 18.", D: "It banned poll taxes." }, correct: "C" },
-            { q: "What was the purpose of the Voting Rights Act of 1965?", options: { A: "To establish a national voting holiday.", B: "To create new political parties.", C: "To protect voting rights by banning unfair tests.", D: "To raise money for presidential campaigns." }, correct: "C" },
-            { q: "Name one factor that affects voter turnout.", options: { A: "The number of candidates.", B: "A voter's height.", C: "A voter's age, income, or education level.", D: "A voter's number of pets." }, correct: "C" },
-            { q: "Name one obstacle that might prevent someone from voting.", options: { A: "Too many candidates to choose from.", B: "The weather is too nice.", C: "Complicated registration or long lines.", D: "The election is on a weekend." }, correct: "C" },
-            { q: "How can students under 18 participate in politics?", options: { A: "By voting in local elections.", B: "By running for president.", C: "By volunteering, learning about issues, and encouraging others to vote.", D: "They cannot participate until they are 18." }, correct: "C" },
-            // Electoral College
-            { q: "What is the Electoral College?", options: { A: "A private university for political science.", B: "A school where politicians learn to debate.", C: "A group that officially elects the president and vice president.", D: "A group of voters who advise the president." }, correct: "C" },
-            { q: "How does a state get its number of electors?", options: { A: "It is based on its date of statehood.", B: "It is based on the state's physical size.", C: "It equals the number of senators and representatives the state has.", D: "Every state gets the same number of electors." }, correct: "C" },
-            { q: "How many electoral votes are needed to win the presidency?", options: { A: "538", B: "100", C: "270", D: "435." }, correct: "C" },
-            { q: "What is the 'winner-take-all' system in the Electoral College?", options: { A: "The candidate with the most money wins.", B: "The winner of the election takes all the money.", C: "The candidate with the most votes in a state gets all its electoral votes.", D: "The winner of the presidency gets to be in charge of all states." }, correct: "C" },
-            { q: "Why do some people support keeping the Electoral College?", options: { A: "It is required by international law.", B: "Because it guarantees the most popular candidate always wins.", C: "Because it gives smaller states a voice.", D: "Because it is the cheapest way to run an election." }, correct: "C" },
-            { q: "Why do some people want to end the Electoral College?", options: { A: "Because it benefits only large cities.", B: "Because it is too expensive to operate.", C: "Because a candidate can win without winning the popular vote.", D: "Because it is too difficult for voters to understand." }, correct: "C" },
-            // Recap Questions
-            { q: "What is a key difference between the Federalists and Anti-Federalists?", options: { A: "They lived in different centuries.", B: "They supported different countries in wars.", C: "They had disagreements about the Constitution's power.", D: "They wanted different national holidays." }, correct: "C" },
-            { q: "Name two of the main functions of a political party.", options: { A: "To run the Supreme Court and Congress.", B: "To print money and declare war.", C: "To recruit candidates and educate voters.", D: "To command the army and run the postal service." }, correct: "C" },
-            { q: "According to the 26th Amendment, what is the minimum age to vote?", options: { A: "21", B: "16", C: "18", D: "25." }, correct: "C" },
-            { q: "Which amendment banned poll taxes?", options: { A: "13th Amendment", B: "19th Amendment", C: "15th Amendment", D: "24th Amendment" }, correct: "D" },
-            { q: "What is the total number of electoral votes in the United States?", options: { A: "435", B: "100", C: "538", D: "270" }, correct: "C" },
-            { q: "Name one way a student under 18 can get involved in an election.", options: { A: "By running for a local office.", B: "By donating money.", C: "By volunteering for a campaign.", D: "By signing official legislation." }, correct: "C" },
-            { q: "How is the popular vote in a state usually connected to its electoral votes?", options: { A: "It has no connection.", B: "The winner of the popular vote gets half the electoral votes.", C: "The popular vote winner gets all the state's electoral votes.", D: "They are not connected in any way." }, correct: "C" }
+            { q: "What is a political party?", answers: [ { text: "A club for former presidents.", correct: false }, { text: "A group that protests government decisions.", correct: false }, { text: "A government agency that runs elections.", correct: false }, { text: "A group of people who share ideas about government and work to get their candidates elected.", correct: true } ] },
+            { q: "How did the two-party system begin in the U.S.?", answers: [ { text: "It was decided by a popular vote.", correct: false }, { text: "The Constitution required it.", correct: false }, { text: "It started with disagreements between the Federalists and Anti-Federalists.", correct: true }, { text: "It was an idea borrowed from Great Britain.", correct: false } ] },
+            { q: "What are the main goals of political parties?", answers: [ { text: "To choose the nation's capital city.", correct: false }, { text: "To make laws and enforce them.", correct: false }, { text: "To provide news and entertainment.", correct: false }, { text: "To win elections, influence government, and share ideas with voters.", correct: true } ] },
+            { q: "What are the main functions of political parties?", answers: [ { text: "To operate the postal service.", correct: false }, { text: "Printing money and funding the military.", correct: false }, { text: "Recruiting candidates, educating voters, and helping candidates win.", correct: true }, { text: "Appointing judges and cabinet members.", correct: false } ] },
+            { q: "How do political parties help citizens get involved?", answers: [ { text: "By providing free transportation to Washington, D.C.", correct: false }, { text: "By requiring citizens to join a party.", correct: false }, { text: "By paying people to vote for their candidates.", correct: false }, { text: "By encouraging people to vote, volunteer, and share opinions.", correct: true } ] },
+            { q: "What is the role of third parties?", answers: [ { text: "To ensure no party gets a majority.", correct: false }, { text: "To always support one of the two major parties.", correct: false }, { text: "To focus on specific issues and influence the major parties.", correct: true }, { text: "To make sure elections are always close.", correct: false } ] },
+            { q: "What does a candidate do during a campaign?", answers: [ { text: "Take a long vacation.", correct: false }, { text: "Writes new laws for the country.", correct: false }, { text: "Hides their ideas from the public.", correct: false }, { text: "Shares ideas, meets voters, and tries to win support.", correct: true } ] },
+            { q: "What do volunteers do in a campaign?", answers: [ { text: "Fact-check the candidate's speeches.", correct: false }, { text: "They are paid to vote for the candidate.", correct: false }, { text: "They help organize events and make phone calls.", correct: true }, { text: "They work as the candidate's bodyguard.", correct: false } ] },
+            { q: "How does the media affect elections?", answers: [ { text: "It legally cannot report on elections.", correct: false }, { text: "By informing the public and acting as a watchdog.", correct: true }, { text: "It tells people how they must vote.", correct: false }, { text: "It only reports on one candidate.", correct: false } ] },
+            { q: "How has social media changed campaigns?", answers: [ { text: "It's a new requirement for running for office.", correct: false }, { text: "It has made campaigning more expensive.", correct: false }, { text: "It allows candidates to talk directly to voters.", correct: true }, { text: "It is the only way to get political news.", correct: false } ] },
+            { q: "How do voters make informed choices?", answers: [ { text: "By choosing the candidate with the best slogan.", correct: false }, { text: "By voting for the candidate who is most famous.", correct: false }, { text: "By checking facts, comparing candidates, and thinking about issues.", correct: true }, { text: "By only listening to one news source.", correct: false } ] },
+            { q: "What do poll watchers do?", answers: [ { text: "They conduct exit polls to predict the winner.", correct: false }, { text: "They tell people who to vote for at the polls.", correct: false }, { text: "They make sure elections are fair and votes are counted correctly.", correct: true }, { text: "They help voters fill out their ballots.", correct: false } ] },
+            { q: "Why do people give money to campaigns?", answers: [ { text: "To get a tax deduction.", correct: false }, { text: "They are legally required to.", correct: false }, { text: "To support candidates or causes they believe in.", correct: true }, { text: "To get a high-paying job in the government.", correct: false } ] },
+            { q: "How does having a lot of money help a campaign?", answers: [ { text: "It lets them pay voters directly.", correct: false }, { text: "It guarantees the candidate will win.", correct: false }, { text: "It helps pay for ads, events, and other activities.", correct: true }, { text: "It allows them to buy votes.", correct: false } ] },
+            { q: "What is a Political Action Committee (PAC)?", answers: [ { text: "A group of retired politicians.", correct: false }, { text: "A group that protests election results.", correct: false }, { text: "A group that collects money to help candidates who support their ideas.", correct: true }, { text: "A government committee that runs political parties.", correct: false } ] },
+            { q: "What did the Citizens United v. FEC (2010) case decide?", answers: [ { text: "That all elections must be publicly funded.", correct: false }, { text: "That corporations cannot spend money on political ads.", correct: false }, { text: "That only individuals can donate to campaigns.", correct: false }, { text: "That businesses can spend unlimited money on political ads as free speech.", correct: true } ] },
+            { q: "Why do some people want limits on campaign spending?", answers: [ { text: "To make elections faster.", correct: false }, { text: "To prevent wealthy donors from having too much influence.", correct: true }, { text: "To make campaigns less interesting.", correct: false }, { text: "To make it harder for new candidates to run.", correct: false } ] },
+            { q: "Who can register to vote in Virginia?", answers: [ { text: "Any U.S. citizen over 16.", correct: false }, { text: "Anyone who lives in Virginia, regardless of age.", correct: false }, { text: "Only people who were born in Virginia.", correct: false }, { text: "U.S. citizens who live in Virginia and are at least 18.", correct: true } ] },
+            { q: "Name one way Virginians can register to vote.", answers: [ { text: "By calling the Governor's office.", correct: false }, { text: "By sending a text message.", correct: false }, { text: "Online, by mail, or in person at the DMV.", correct: true }, { text: "By telling a poll worker on Election Day.", correct: false } ] },
+            { q: "How have voting rights in the U.S. changed over time?", answers: [ { text: "Voting has become more difficult.", correct: false }, { text: "Fewer people are allowed to vote now.", correct: false }, { text: "More groups gained the right to vote through amendments and laws.", correct: true }, { text: "Only wealthy people can vote now.", correct: false } ] },
+            { q: "What right did the 15th Amendment grant?", answers: [ { text: "It granted citizenship to all persons born in the U.S.", correct: false }, { text: "It gave women the right to vote.", correct: false }, { text: "It gave African American men the right to vote.", correct: true }, { text: "It lowered the voting age to 18.", correct: false } ] },
+            { q: "What right did the 19th Amendment grant?", answers: [ { text: "It gave women the right to vote.", correct: true }, { text: "It banned poll taxes.", correct: false }, { text: "It gave 18-year-olds the right to vote.", correct: false }, { text: "It prohibited the sale of alcohol.", correct: false } ] },
+            { q: "What right did the 23rd Amendment grant?", answers: [ { text: "It limited the President to two terms.", correct: false }, { text: "It gave women the right to vote.", correct: false }, { text: "It gave people in Washington, D.C. the right to vote for president.", correct: true }, { text: "It ended poll taxes.", correct: false } ] },
+            { q: "What did the 24th Amendment end?", answers: [ { text: "Slavery.", correct: false }, { text: "The Electoral College.", correct: false }, { text: "Poll taxes.", correct: true }, { text: "The two-party system.", correct: false } ] },
+            { q: "What did the 26th Amendment change?", answers: [ { text: "The number of senators per state.", correct: false }, { text: "It gave women the right to vote.", correct: false }, { text: "It lowered the voting age to 18.", correct: true }, { text: "It banned poll taxes.", correct: false } ] },
+            { q: "What was the purpose of the Voting Rights Act of 1965?", answers: [ { text: "To establish a national voting holiday.", correct: false }, { text: "To create new political parties.", correct: false }, { text: "To protect voting rights by banning unfair tests.", correct: true }, { text: "To raise money for presidential campaigns.", correct: false } ] },
+            { q: "Name one factor that affects voter turnout.", answers: [ { text: "The number of candidates.", correct: false }, { text: "A voter's height.", correct: false }, { text: "A voter's age, income, or education level.", correct: true }, { text: "A voter's number of pets.", correct: false } ] },
+            { q: "Name one obstacle that might prevent someone from voting.", answers: [ { text: "Too many candidates to choose from.", correct: false }, { text: "The weather is too nice.", correct: false }, { text: "Complicated registration or long lines.", correct: true }, { text: "The election is on a weekend.", correct: false } ] },
+            { q: "How can students under 18 participate in politics?", answers: [ { text: "By voting in local elections.", correct: false }, { text: "By running for president.", correct: false }, { text: "By volunteering, learning about issues, and encouraging others to vote.", correct: true }, { text: "They cannot participate until they are 18.", correct: false } ] },
+            { q: "What is the Electoral College?", answers: [ { text: "A private university for political science.", correct: false }, { text: "A school where politicians learn to debate.", correct: false }, { text: "A group that officially elects the president and vice president.", correct: true }, { text: "A group of voters who advise the president.", correct: false } ] },
+            { q: "How does a state get its number of electors?", answers: [ { text: "It is based on its date of statehood.", correct: false }, { text: "It is based on the state's physical size.", correct: false }, { text: "It equals the number of senators and representatives the state has.", correct: true }, { text: "Every state gets the same number of electors.", correct: false } ] },
+            { q: "How many electoral votes are needed to win the presidency?", answers: [ { text: "538", correct: false }, { text: "100", correct: false }, { text: "270", correct: true }, { text: "435", correct: false } ] },
+            { q: "What is the 'winner-take-all' system in the Electoral College?", answers: [ { text: "The candidate with the most money wins.", correct: false }, { text: "The winner of the election takes all the money.", correct: false }, { text: "The candidate with the most votes in a state gets all its electoral votes.", correct: true }, { text: "The winner of the presidency gets to be in charge of all states.", correct: false } ] },
+            { q: "Why do some people support keeping the Electoral College?", answers: [ { text: "It is required by international law.", correct: false }, { text: "Because it guarantees the most popular candidate always wins.", correct: false }, { text: "Because it gives smaller states a voice.", correct: true }, { text: "Because it is the cheapest way to run an election.", correct: false } ] },
+            { q: "Why do some people want to end the Electoral College?", answers: [ { text: "Because it benefits only large cities.", correct: false }, { text: "Because it is too expensive to operate.", correct: false }, { text: "Because a candidate can win without winning the popular vote.", correct: true }, { text: "Because it is too difficult for voters to understand.", correct: false } ] },
+            { q: "What is a key difference between the Federalists and Anti-Federalists?", answers: [ { text: "They lived in different centuries.", correct: false }, { text: "They supported different countries in wars.", correct: false }, { text: "They had disagreements about the Constitution's power.", correct: true }, { text: "They wanted different national holidays.", correct: false } ] },
+            { q: "Name two of the main functions of a political party.", answers: [ { text: "To run the Supreme Court and Congress.", correct: false }, { text: "To print money and declare war.", correct: false }, { text: "To recruit candidates and educate voters.", correct: true }, { text: "To command the army and run the postal service.", correct: false } ] },
+            { q: "According to the 26th Amendment, what is the minimum age to vote?", answers: [ { text: "21", correct: false }, { text: "16", correct: false }, { text: "18", correct: true }, { text: "25", correct: false } ] },
+            { q: "Which amendment banned poll taxes?", answers: [ { text: "13th Amendment", correct: false }, { text: "19th Amendment", correct: false }, { text: "15th Amendment", correct: false }, { text: "24th Amendment", correct: true } ] },
+            { q: "What is the total number of electoral votes in the United States?", answers: [ { text: "435", correct: false }, { text: "100", correct: false }, { text: "538", correct: true }, { text: "270", correct: false } ] },
+            { q: "Name one way a student under 18 can get involved in an election.", answers: [ { text: "By running for a local office.", correct: false }, { text: "By donating money.", correct: false }, { text: "By volunteering for a campaign.", correct: true }, { text: "By signing official legislation.", correct: false } ] },
+            { q: "How is the popular vote in a state usually connected to its electoral votes?", answers: [ { text: "It has no connection.", correct: false }, { text: "The winner of the popular vote gets half the electoral votes.", correct: false }, { text: "The popular vote winner gets all the state's electoral votes.", correct: true }, { text: "They are not connected in any way.", correct: false } ] }
         ];
 
         let availableQuestions = [];
         let currentQuestion = null;
         let selectedColumn = -1;
-        let isWaitingForAnswer = false; // Flag to prevent multiple clicks during question
+        let isWaitingForAnswer = false;
 
-        // --- Game Setup Functions ---
         function initializeGame() {
-            board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0)); // 0 for empty, 1-7 for teams
+            board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
             createBoardCells();
             resetQuestions();
             updateHUD();
@@ -347,30 +320,27 @@
             teamCount = parseInt(prompt("How many teams? (2-7)", 2));
             if (isNaN(teamCount) || teamCount < 2 || teamCount > 7) {
                 alert("Please enter a number between 2 and 7 for the number of teams.");
-                teamCount = 2; // Default to 2 if invalid input
+                teamCount = 2;
             }
             teamNames = [];
             for (let i = 0; i < teamCount; i++) {
-                let name = prompt(`Enter name for Team ${i + 1} (Player ${i + 1} - ${teamColors[i].replace('player-', '')})`, `Team ${i + 1}`);
+                let name = prompt(`Enter name for Team ${i + 1}`, `Team ${i + 1}`);
                 teamNames.push(name || `Team ${i + 1}`);
             }
             teamScores = Array(teamCount).fill(0);
             currentTeamIndex = 0;
-            initializeGame(); // This will also create/reset the board and HUD
+            initializeGame();
         }
 
         function createBoardCells() {
             const boardDiv = document.getElementById("board");
-            boardDiv.innerHTML = ""; // Clear existing cells
+            boardDiv.innerHTML = "";
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
                     const cell = document.createElement("div");
                     cell.className = "cell";
                     cell.dataset.row = r;
                     cell.dataset.col = c;
-                    // Only attach click handler to the top row for visual feedback,
-                    // actual drop disc logic will handle finding the lowest spot.
-                    // Or, more intuitively, attach to all but only process if not full.
                     cell.onclick = () => handleColumnClick(c);
                     boardDiv.appendChild(cell);
                 }
@@ -379,16 +349,15 @@
 
         function updateHUD() {
             const scoresText = teamNames.map((name, i) => {
-                const colorName = teamColors[i].replace('player-', ''); // e.g., 'red', 'orange'
-                return `<span style="color: var(--${teamColors[i]});">${name} (${colorName}): ${teamScores[i]}</span>`;
+                const colorVar = `--${teamColors[i]}`;
+                return `<span style="color: var(${colorVar}); font-weight: bold;">${name}: ${teamScores[i]}</span>`;
             }).join(" | ");
-            document.getElementById("hud").innerHTML = `Turn: <span style="color: var(--${teamColors[currentTeamIndex]});">${teamNames[currentTeamIndex]}</span> | Scores: ${scoresText}`;
+            document.getElementById("hud").innerHTML = `Turn: <span style="color: var(--${teamColors[currentTeamIndex]}); font-weight: bold;">${teamNames[currentTeamIndex]}</span> | Scores: ${scoresText}`;
         }
 
-        // --- Question & Answer Logic ---
         function resetQuestions() {
-            availableQuestions = [...questions]; // Clone all questions
-            shuffleArray(availableQuestions); // Shuffle them
+            availableQuestions = [...questions];
+            shuffleArray(availableQuestions);
         }
 
         function getNextQuestion() {
@@ -396,63 +365,74 @@
                 alert("You've answered all the questions! Reshuffling for more fun!");
                 resetQuestions();
             }
-            const q = availableQuestions.pop(); // Get and remove last question
+            const q = availableQuestions.pop();
             currentQuestion = q;
             return q;
         }
 
         function handleColumnClick(col) {
-            if (isWaitingForAnswer || board[0][col] !== 0) { // If modal is open or column is full
+            if (isWaitingForAnswer || board[0][col] !== 0) {
                 if (board[0][col] !== 0 && !isWaitingForAnswer) alert("That column is full! Please choose another.");
                 return;
             }
-
             selectedColumn = col;
             const q = getNextQuestion();
             displayQuestion(q);
         }
 
+        // --- NEW: Function to display question with shuffled answers ---
         function displayQuestion(qData) {
-            document.getElementById("question-text").textContent = qData.q;
-            document.getElementById("option-a").textContent = qData.options.A;
-            document.getElementById("option-b").textContent = qData.options.B;
-            document.getElementById("option-c").textContent = qData.options.C;
-            document.getElementById("option-d").textContent = qData.options.D;
+            const questionTextElement = document.getElementById("question-text");
+            const answerOptionsElement = document.getElementById("answer-options");
+            
+            answerOptionsElement.innerHTML = ""; // Clear previous answer buttons
+            questionTextElement.textContent = qData.q;
+
+            const shuffledAnswers = shuffleArray([...qData.answers]); // Shuffle a copy of the answers
+
+            shuffledAnswers.forEach(answer => {
+                const button = document.createElement("button");
+                button.innerText = answer.text;
+                button.classList.add("answer-button");
+                if (answer.correct) {
+                    button.dataset.correct = true;
+                }
+                button.addEventListener('click', selectAnswer);
+                answerOptionsElement.appendChild(button);
+            });
 
             const modal = document.getElementById("question-modal");
             modal.classList.add('is-visible');
             isWaitingForAnswer = true;
         }
+        
+        // --- NEW: Function to handle answer selection ---
+        function selectAnswer(e) {
+            const selectedButton = e.target;
+            const isCorrect = selectedButton.dataset.correct === "true";
 
-        function checkAnswer(choice) {
             const modal = document.getElementById("question-modal");
             modal.classList.remove('is-visible');
             isWaitingForAnswer = false;
 
-            if (choice === currentQuestion.correct) {
-                // Correct answer, now drop the disc
+            if (isCorrect) {
                 dropDisc(selectedColumn);
             } else {
-                alert(`Oops! The correct answer was ${currentQuestion.correct}. Next team's turn.`);
+                const correctAnswer = currentQuestion.answers.find(ans => ans.correct).text;
+                alert(`Oops! The correct answer was: "${correctAnswer}". Next team's turn.`);
                 nextTeam();
             }
         }
 
-        // --- Disc Drop & Game Logic ---
         function dropDisc(col) {
             for (let row = ROWS - 1; row >= 0; row--) {
                 if (board[row][col] === 0) {
-                    board[row][col] = currentTeamIndex + 1; // Store team index + 1 (1-7)
+                    board[row][col] = currentTeamIndex + 1;
                     const cellDiv = document.querySelector(`[data-row='${row}'][data-col='${col}']`);
-                    
-                    // Create disc element
                     const discDiv = document.createElement("div");
                     discDiv.className = `disc ${teamColors[currentTeamIndex]}`;
-                    
-                    // Append disc to cell and trigger animation
                     cellDiv.appendChild(discDiv);
 
-                    // After animation, check win or move to next turn
                     discDiv.addEventListener('animationend', () => {
                         if (checkWin(row, col)) {
                             teamScores[currentTeamIndex]++;
@@ -465,7 +445,7 @@
                             nextTeam();
                         }
                     }, { once: true });
-                    return; // Disc dropped, exit loop
+                    return;
                 }
             }
         }
@@ -477,38 +457,27 @@
 
         function checkWin(row, col) {
             const player = board[row][col];
-            const directions = [
-                { dr: 0, dc: 1 },  // Horizontal
-                { dr: 1, dc: 0 },  // Vertical
-                { dr: 1, dc: 1 },  // Diagonal (\)
-                { dr: 1, dc: -1 }  // Diagonal (/)
-            ];
+            const directions = [ { dr: 0, dc: 1 }, { dr: 1, dc: 0 }, { dr: 1, dc: 1 }, { dr: 1, dc: -1 } ];
 
             for (const dir of directions) {
                 let count = 0;
                 let winningCells = [];
-
-                // Check in both positive and negative directions
-                for (let i = -3; i <= 3; i++) { // Check 7 cells centered around (row,col)
+                for (let i = -3; i <= 3; i++) {
                     const r = row + dir.dr * i;
                     const c = col + dir.dc * i;
-
                     if (r >= 0 && r < ROWS && c >= 0 && c < COLS && board[r][c] === player) {
                         count++;
                         winningCells.push({r, c});
                         if (count >= 4) {
-                            // Mark winning discs for animation
-                            winningCells.slice(winningCells.length - 4).forEach(cell => {
+                            winningCells.slice(-4).forEach(cell => {
                                 const discElement = document.querySelector(`[data-row='${cell.r}'][data-col='${cell.c}'] .disc`);
-                                if (discElement) {
-                                    discElement.classList.add('winning-disc');
-                                }
+                                if (discElement) discElement.classList.add('winning-disc');
                             });
                             return true;
                         }
                     } else {
-                        count = 0; // Reset count if player's discs are interrupted
-                        winningCells = []; // Reset winning cells array
+                        count = 0;
+                        winningCells = [];
                     }
                 }
             }
@@ -516,26 +485,25 @@
         }
 
         function isBoardFull() {
-            return board[0].every(cell => cell !== 0); // Check if the top row has any empty cells
+            return board[0].every(cell => cell !== 0);
         }
 
         function resetBoard() {
             board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
-            createBoardCells(); // Re-render the empty board cells
-            resetQuestions(); // Reshuffle questions for a new round
-            currentTeamIndex = 0; // Reset to first team
+            createBoardCells();
+            resetQuestions();
+            currentTeamIndex = 0;
             updateHUD();
         }
 
-        // Utility: Fisher-Yates shuffle algorithm
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
+            return array;
         }
 
-        // Initialize game on load
         document.addEventListener('DOMContentLoaded', () => {
             initializeGame();
         });
